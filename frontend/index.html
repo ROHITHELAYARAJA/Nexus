@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXUS - Advanced AI Command</title>
+
+    <!-- Premium Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Main Styles -->
+    <link rel="stylesheet" href="css/orbital.css">
+
+    <!-- Core Dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- Load Support Modules First -->
+    <script src="js/background-effects.js"></script>
+    <script src="js/voice-recognition.js"></script>
+    <script src="js/neural-voice.js"></script>
+    <script src="js/file-manager.js"></script>
+    <script src="js/chat-history.js"></script>
+    <script src="js/settings.js"></script>
+</head>
+
+<body class="premium-ui">
+    <!-- Background Canvas for Neural Effects -->
+    <canvas id="neural-canvas"></canvas>
+
+    <div class="app-layout">
+        <!-- Persistent Side Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-top">
+                <button class="btn-action-pill" id="new-chat">
+                    <div class="pill-inner">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Initiate Session</span>
+                    </div>
+                    <div class="pill-glow"></div>
+                </button>
+            </div>
+
+            <div class="sidebar-scrollable">
+                <div class="search-container">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="history-search" placeholder="Search sessions...">
+                </div>
+
+                <div class="session-list" id="history-list">
+                    <!-- Dynamic Sessions -->
+                </div>
+            </div>
+
+            <div class="sidebar-bottom">
+                <button class="nav-item" id="settings-toggle">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3"></circle>
+                        <path
+                            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                        </path>
+                    </svg>
+                    <span>System Config</span>
+                </button>
+                <div class="user-profile">
+                    <div class="avatar">RE</div>
+                    <div class="user-info">
+                        <span class="username">Rohith E</span>
+                        <span class="status">Neural Core Active</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="workspace">
+            <!-- Professional Red Stealth Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <span class="brand">NEXUS <span class="version">V2.0</span></span>
+                </div>
+                <div class="header-center">
+                    <div class="model-selector-wrapper">
+                        <select id="model-selector" class="model-select-dropdown">
+                            <!-- Models will be loaded dynamically -->
+                        </select>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="status-indicator" id="metrics-toggle">
+                        <span class="pulse"></span> System Healthy
+                    </button>
+                    <button class="btn-circular danger" id="clear-history" title="Clear All History">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                            </path>
+                        </svg>
+                    </button>
+                    <button class="btn-circular" id="export-pdf-btn" title="Export to PDF">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Chat Content -->
+            <div class="chat-viewport">
+                <div class="messages-container" id="chat-messages">
+                    <div class="empty-state">
+                        <div class="nexus-logo-anim">
+                            <div class="ring"></div>
+                            <div class="core"></div>
+                        </div>
+                        <h1>What can NEXUS solve for you?</h1>
+                        <p>Specialized models are indexed and ready for deployment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Universal Input -->
+            <div class="input-section">
+                <div class="input-container-wrapper">
+                    <div class="input-toolbar-top">
+                        <div id="file-previews" class="previews-row"></div>
+                    </div>
+
+                    <div class="main-input-group">
+                        <button class="input-action-btn" id="file-upload-btn" title="Add Intelligence">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path
+                                    d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48">
+                                </path>
+                            </svg>
+                        </button>
+
+                        <textarea id="chat-input" placeholder="Type a message or drop files..." rows="1"></textarea>
+
+                        <div class="input-group-right">
+                            <button class="input-action-btn" id="voice-btn" title="Voice Input">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                                </svg>
+                            </button>
+                            <button class="send-btn" id="send-btn" disabled>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <line x1="12" y1="19" x2="12" y2="5"></line>
+                                    <polyline points="5 12 12 5 19 12"></polyline>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="input-footer">
+                        <span>NEXUS can make mistakes. Verify critical information.</span>
+                    </div>
+                </div>
+            </div>
+
+            <input type="file" id="file-input" class="hidden" multiple>
+        </main>
+    </div>
+
+    <!-- Premium Metrics Panel -->
+    <div class="overlay-panel hidden" id="metrics-panel">
+        <div class="panel-card">
+            <div class="panel-header">
+                <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;">
+                        <path d="M18 20V10"></path>
+                        <path d="M12 20V4"></path>
+                        <path d="M6 20v-6"></path>
+                    </svg> Neural Performance</h3>
+                <button class="panel-close-btn" id="close-metrics">&times;</button>
+            </div>
+            <div class="panel-content">
+                <div class="metric-row">
+                    <div class="label">CPU Usage</div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" id="cpu-bar" style="width: 0%"></div>
+                    </div>
+                    <span class="value" id="cpu-text">0%</span>
+                </div>
+                <div class="metric-row">
+                    <div class="label">RAM Allocation</div>
+                    <div class="bar-bg">
+                        <div class="bar-fill" id="memory-bar" style="width: 0%"></div>
+                    </div>
+                    <span class="value" id="memory-text">0%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Premium Settings Modal -->
+    <div class="modal hidden" id="settings-modal">
+        <div class="modal-backdrop" id="settings-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-head">
+                <div class="nexus-logo-anim small-logo">
+                    <div class="ring"></div>
+                    <div class="core"></div>
+                </div>
+                <h2>System Configuration</h2>
+                <button class="close-btn" id="close-settings">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-tabs">
+                    <button class="tab-btn active" data-tab="model-tab">Model</button>
+                    <button class="tab-btn" data-tab="ui-tab">UI/UX</button>
+                    <button class="tab-btn" data-tab="voice-tab">Voice</button>
+                    <button class="tab-btn" data-tab="data-tab">Data</button>
+                </div>
+
+                <div class="tab-content" id="model-tab">
+                    <div class="settings-group">
+                        <label>Default AI Model</label>
+                        <select id="setting-default-model" class="premium-select">
+                            <!-- Models will be loaded dynamically -->
+                        </select>
+                    </div>
+                    <div class="settings-group">
+                        <label>Inference Temperature</label>
+                        <div class="slider-wrapper">
+                            <input type="range" id="temp-slider" min="0" max="20" step="1" value="7">
+                            <span id="temp-value" class="badge">0.7</span>
+                        </div>
+                        <p class="desc">Higher values make responses more creative but less predictable.</p>
+                    </div>
+                    <div class="settings-group">
+                        <label>Max Context Tokens</label>
+                        <input type="number" id="setting-max-tokens" class="premium-input" value="4096">
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="ui-tab">
+                    <div class="settings-group">
+                        <label>Interface Theme</label>
+                        <div class="theme-grid">
+                            <div class="theme-card active" data-theme="deep-space">Deep Space</div>
+                            <div class="theme-card" data-theme="orbital-dark">Orbital Dark</div>
+                            <div class="theme-card" data-theme="neon-pulse">Neon Pulse</div>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <label>Fluid Backgrounds</label>
+                        <div class="toggle-wrapper">
+                            <span>Enable Neural Network Visualization</span>
+                            <input type="checkbox" id="setting-bg-effects" checked>
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <label>System Typography</label>
+                        <select id="setting-font-family" class="premium-select">
+                            <option value="'Outfit', sans-serif">Outfit (Premium)</option>
+                            <option value="'Inter', sans-serif">Inter (Modern)</option>
+                            <option value="'JetBrains Mono', monospace">Terminal (Code)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="voice-tab">
+                    <div class="settings-group">
+                        <label>Neural Voice Output (TTS)</label>
+                        <div class="toggle-wrapper">
+                            <span>AI speaks back to you</span>
+                            <input type="checkbox" id="setting-voice-output">
+                        </div>
+                    </div>
+                    <div class="settings-group">
+                        <label>Voice Recognition Language</label>
+                        <select id="setting-voice-lang" class="premium-select">
+                            <option value="en-US">English (US)</option>
+                            <option value="en-GB">English (UK)</option>
+                        </select>
+                    </div>
+                    <div class="settings-group">
+                        <label>Auto-Send Voice</label>
+                        <div class="toggle-wrapper">
+                            <span>Send message immediately after speaking</span>
+                            <input type="checkbox" id="setting-voice-autosend">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="data-tab">
+                    <div class="settings-group">
+                        <label>Session Management</label>
+                        <p class="desc">Specific chats can be deleted via the sidebar (trash icon).</p>
+                        <button class="btn-danger-outline" id="setting-clear-all">Purge All Neural Cache</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <button class="btn-simple" id="reset-settings">Reset Defaults</button>
+                <button class="btn-solid" id="save-settings">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Toast Layer -->
+    <div class="toast-layer">
+        <div class="toast hidden" id="status-toast">
+            <div class="toast-icon"></div>
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <!-- Core Logic -->
+    <script src="js/nexus-ui.js"></script>
+</body>
+
+</html>

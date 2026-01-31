@@ -1,0 +1,37 @@
+nexus:
+  name: "NEXUS"
+  version: "1.0.0"
+  description: "Next-generation Super AI Agent"
+  
+ollama:
+  base_url: "http://localhost:11434"
+  timeout: 120
+  models:
+  models:
+    default:
+      name: "deepseek-v3.1:671b-cloud"
+      role: "Core Intelligence Brain"
+      use_for: ["all_tasks", "reasoning", "chat", "coding"]
+
+
+agents:
+  enable_memory: true
+  enable_planning: true
+  max_iterations: 10
+  thinking_budget: high
+  temperature: 0.7
+  
+tools:
+  file_access: true
+  code_execution: true
+  web_search: false  # Can enable when search tool is added
+  system_metrics: true
+  
+ui:
+  theme: "orbital_dark"
+  streaming: true
+  show_metrics: true
+  show_thinking: true
+  host: "localhost"
+  port: 8000
+  backend_port: 8080
